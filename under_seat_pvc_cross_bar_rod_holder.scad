@@ -46,7 +46,7 @@ rearPvcInsertAngle=-8;
 rearPvcInsertPostExtensionXOffset=-10;
 rearPvcInsertPostExtensionYOffset=10;
 
-leftSide=false;
+leftSide=true;
 
 // This angle allows the body to be oriented such that it more or less aligns with
 // an imaginary line from front to back between the seat posts.  The "short-side"
@@ -60,7 +60,7 @@ receiverAngleOffsetAdjust=(leftSide) ? 1.5 : 1;
 // is also affected by the receiverVerticalAngle.
 insertVerticalAngle=(leftSide) ? 2 : -4;
 
-keyBottomRotationAdjust=(leftSide) ? -2 : 0;
+keyBottomRotationAdjust=(leftSide) ? -2 : 1;
 
 overlap=0.001;
 $fn=50;
@@ -165,6 +165,7 @@ module frontInsertionReceiverCutout() {
 
 module pvcPassThruBody() {
     minkowskiAdjustedBracketWidth=bracketWidth-bodyEdgeRoundOffDia;
+    extraForPvcInsertBaseRotation=2;
     difference() {
         minkowski() {
             translate([0,0,bodyEdgeRoundOffDia/2])
@@ -182,14 +183,15 @@ module pvcPassThruBody() {
                 // Extension to make a base for the pvc insert post
                 translate([pvc125FittingOuterDia/2+bracketCasingThickness+rearPvcInsertPostExtensionXOffset,
                         -pvc125FittingOuterDia/2-rearPvcInsertPostExtensionYOffset,0])
-                    cylinder(d=bodyExtensionRoundoffDia, h=minkowskiAdjustedBracketWidth);
+                    rotate([0,insertVerticalAngle,0])
+                        cylinder(d=bodyExtensionRoundoffDia, h=minkowskiAdjustedBracketWidth);
             }
             sphere(d=bodyEdgeRoundOffDia);
         }
         // hole for pvc fitting
-        translate([0,0,-overlap])
+        translate([0,0,-overlap-extraForPvcInsertBaseRotation/2])
             cylinder(d=pvc125FittingOuterDia+pvcFittingTolerance*2, 
-            h=bracketWidth+overlap*2);
+            h=bracketWidth+overlap*2+extraForPvcInsertBaseRotation);
         
         setScrewCutLength=pvc125FittingOuterDia/2+bracketCasingThickness;
         setScrewCenterZPos=bracketWidth/2;
