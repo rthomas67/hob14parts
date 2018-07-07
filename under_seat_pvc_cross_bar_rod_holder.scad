@@ -42,9 +42,9 @@ hobieChairLegKeyRidgeTolerance=0.5;
 // i.e. If the receiver is horizontal, the insert angles down a bit
 rearPvcInsertLength=40;
 rearPvcInsertOffset=10;
-rearPvcInsertAngle=-8;
-rearPvcInsertPostExtensionXOffset=-10;
-rearPvcInsertPostExtensionYOffset=10;
+rearPvcInsertAngle=0;  // was -8 before adding "z post" - TODO: Remove this
+rearPvcInsertPostExtensionXOffset=-0;  // was -10
+rearPvcInsertPostExtensionYOffset=0;   // was 10
 
 leftSide=true;
 
@@ -52,15 +52,36 @@ leftSide=true;
 // an imaginary line from front to back between the seat posts.  The "short-side"
 // seat post insert on the front seat post is not directly aligned, and is
 // a little different on the left and right side of the seat.
-receiverVerticalAngle=(leftSide) ? -2 : -2;
-receiverAngleOffsetAdjust=(leftSide) ? 1.5 : 1;
+frontInsertionReceiverVerticalAngle=(leftSide) ? -2 : -2;
+// This re-centers the cutout.
+frontInsertionReceiverVerticalAngleOffsetAdjust=(leftSide) ? 2.5 : 1;
+
+frontInsertionReceiverKeyAngleOffsetAdjust=(leftSide) ? 1.5 : 1;
+
+// These align the key and the angle of the cutout hole on the receiver
+// for the rear chair-leg insert post
+rearInsertionReceiverVerticalAngle=(leftSide) ? 0 : 0;
+// This re-centers the cutout.
+rearInsertionReceiverVerticalAngleOffsetAdjust=(leftSide) ? 0 : 0;
+
+rearInsertionReceiverKeyAngleOffsetAdjust=(leftSide) ? 2 : 0;
 
 // Note: This angle "helps" the ultimate position/orientation of the center body
 // but must be combined with some tilt in the 45 degree PVC elbow.  This
 // is also affected by the receiverVerticalAngle.
-insertVerticalAngle=(leftSide) ? 2 : -4;
+insertVerticalAngle=(leftSide) ? -0 : 0;  // was -4 and 4
 
-keyBottomRotationAdjust=(leftSide) ? -2 : 1;
+connectorPostDia=38;
+
+connectorPostLength=(leftSide) ? 30 : 50;
+
+connectorPostTopRotationX=(leftSide) ? -20 : 20;
+connectorPostTopRotationY=(leftSide) ? 20 : 30;
+connectorPostTopLength=(leftSide) ? 20 : 20;
+
+connectorPostBottomRotationX=(leftSide) ? -20 : -15;
+connectorPostBottomRotationY=(leftSide) ? -20 : -15;
+connectorPostBottomLength=(leftSide) ? 20 : 20;
 
 overlap=0.001;
 $fn=50;
@@ -71,29 +92,105 @@ union() {
     translate([-pvc125FittingOuterDia/2-bracketCasingThickness/4,hobieChairLegInsertOffset,0])
         // Note: receiverVerticalAngle is applied to the opening so the exterior can remain flat for printing
         rotate([0,-90,0])
-            frontInsertionReceiver();
-    rotate([0,0,rearPvcInsertAngle])
-        translate([pvc125FittingOuterDia/2+bracketCasingThickness/3,-rearPvcInsertOffset,0])
+            insertionReceiver(frontInsertionReceiverVerticalAngle,
+                    frontInsertionReceiverVerticalAngleOffsetAdjust,
+                    frontInsertionReceiverKeyAngleOffsetAdjust);
+    rotate([0,0,rearPvcInsertAngle]) 
+        translate([pvc125FittingOuterDia/2+bracketCasingThickness,-rearPvcInsertOffset,0]) {
             rotate([0,insertVerticalAngle,0])
-            rotate([0,90,0])
-                rearPvcInsertPost();
+            rotate([0,90,0]) {
+                connectorPost(connectorPostLength,connectorPostDia,
+                        connectorPostTopRotationX,connectorPostTopRotationY,
+                        connectorPostTopLength,connectorPostBottomRotationX,connectorPostBottomRotationY,
+                        connectorPostBottomLength);
+                connectorPostTransform(connectorPostLength,connectorPostDia,
+                        connectorPostTopRotationX,connectorPostTopRotationY,connectorPostTopLength,
+                        connectorPostBottomRotationX,connectorPostBottomRotationY,
+                        connectorPostBottomLength) {
+                    insertionReceiver(rearInsertionReceiverVerticalAngle,
+                        rearInsertionReceiverVerticalAngleOffsetAdjust,
+                        rearInsertionReceiverKeyAngleOffsetAdjust);
+                }
+            }
+        }
 }
 
-module rearPvcInsertPost() {
-    cylinder(d=pvc100FittingInnerDia, h=rearPvcInsertLength);
+/*
+ * apply this to a part that is centered on the x/y plane before
+ * moving it to the spot where the connector post starts to put
+ * it at the other end of the connector post.
+ */
+module connectorPostTransform(postLength, postDia, 
+        topRotationX,topRotationY, topLength, 
+        bottomRotationX, bottomRotationY,bottomLength) {
+    // 3 stages of move then rotate into displaced position
+    translate([0,0,bottomLength]) rotate([bottomRotationX,bottomRotationX,0]) 
+        translate([0,0,postLength])
+            rotate([topRotationX,topRotationY,0]) translate([0,0,topLength])
+                children();
+}
+/*
+ * Creates a post with an angled section at the top and bottom to create a flat interface
+ * on each end.  Used to connect two other parts at odd angles
+ * 
+ * Bottom flat-interface will be aligned with the x/y plane.
+ */
+module connectorPost(postLength, postDia, 
+        topRotationX,topRotationY, topLength, 
+        bottomRotationX,bottomRotationY,bottomLength) {
+    hull() {
+  //      union() {  // uncomment for diagnostics... instead of hull
+            // base (middle) part -- cut a cylinder off on the top at the rotation angles
+            translate([0,0,bottomLength]) rotate([bottomRotationX,bottomRotationY,0]) {
+            difference() {
+                translate([0,0,-postDia])
+                    cylinder(d=postDia, h=postLength+postDia*2);
+                // cut off top
+                translate([0,0,postLength])
+                    rotate([topRotationX/2,topRotationY/2,0])
+                        cylinder(d=postDia*2, h=postDia*2);
+                // cut off bottom
+                rotate([-bottomRotationX/2,-bottomRotationY/2,0])
+                    translate([0,0,-postDia*2])
+                    cylinder(d=postDia*2, h=postDia*2);
+            }
+            // top-part -- cut a cylinder off on the bottom at the topRotation angles
+            translate([0,0,postLength])
+                rotate([topRotationX/2,topRotationY/2,0])
+                    difference() {
+                        // Note: This one rotates after moving it to cut at the bottom.
+                        rotate([topRotationX/2,topRotationY/2,0])
+                            translate([0,0,-topLength*0.5])
+                                cylinder(d=postDia, h=topLength*1.5);
+                        translate([0,0,-topLength])
+                            cylinder(d=postDia*2, h=topLength);
+                    }
+            }
+            // bottom-part -- cut a cylinder off on the top at the bottomRotation angles
+            difference() {
+                        cylinder(d=postDia, h=bottomLength*1.5);
+                        translate([0,0,bottomLength])
+                            rotate([bottomRotationX/2,bottomRotationY/2,0])
+                                cylinder(d=postDia*2, h=bottomLength);
+                }
+        
+    }
 }
 
 
-module frontInsertionReceiver() {
+module insertionReceiver(insertionReceiverVerticalAngle,
+        insertionReceiverVerticalAngleOffsetAdjust, 
+        insertionReceiverKeyBottomRotationAdjust) {
     insertionReceiverOuterDia=hobieChairLegInsertDia+frontInsertionReceiverCasingThickness*2;
     insertionReceiverOverallLength=hobieChairLegInsertDepth+bracketCasingThickness;
     difference() {
         cylinder(d=insertionReceiverOuterDia,
             h=insertionReceiverOverallLength);
     translate([0,0,bracketCasingThickness+overlap])
-        translate([receiverAngleOffsetAdjust,0,0])  // offset to recenter
-            rotate([0,receiverVerticalAngle,keyBottomRotationAdjust])  // apply the vertical angle internally
-                frontInsertionReceiverCutout();
+        translate([insertionReceiverVerticalAngleOffsetAdjust,0,0])  // offset to recenter
+            rotate([0,insertionReceiverVerticalAngle,insertionReceiverKeyBottomRotationAdjust])
+                // apply the vertical angle internally
+                insertionReceiverCutout();
         // flatten the sides of the cylinder
         translate([-insertionReceiverOuterDia/2-bracketWidth/2,
                 -insertionReceiverOuterDia/2-overlap,-overlap])
@@ -108,7 +205,7 @@ module frontInsertionReceiver() {
     }
 }
 
-module frontInsertionReceiverCutout() {
+module insertionReceiverCutout() {
     flatSideCornerHeight=1.5;
     bevelHeight=3;
     bevelFactor=1.5;
@@ -203,6 +300,21 @@ module pvcPassThruBody() {
         translate([0,0,setScrewCenterZPos])
             rotate([-90,0,0])
                 cylinder(d=setScrewHoleDia, h=setScrewCutLength);
+        // Left or Right Stamp
+        stampDepth=0.2;
+        fontHeight=8;
+        stampYInset=-12;
+        stampXOffset=(leftSide) ? -12 : -16;
+        translate([stampXOffset,pvc125FittingOuterDia/2-fontHeight-stampYInset,
+            bracketWidth-stampDepth]) {
+            linear_extrude(height=stampDepth*4) {
+                if (leftSide) {
+                    text("LEFT",font="lintsec",size=fontHeight);
+                } else {
+                    text("RIGHT",font="lintsec",size=fontHeight);
+                }
+            }
+        }
     }
 }
     
