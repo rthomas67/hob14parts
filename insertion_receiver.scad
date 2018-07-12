@@ -8,10 +8,15 @@ hobieChairLegKeyRidgeHeightCurvatureOverlap=0.5;
 hobieChairLegKeyRidgeWidth=4;
 hobieChairLegKeyRidgeTolerance=0.5;
 
+receiverStampDepth=0.3;
+receiverFontHeight=4;
+receiverStampXPos=-3;
+receiverStampYPos=16;
+
 module insertionReceiver(insertionReceiverVerticalAngle,
         insertionReceiverVerticalAngleOffsetAdjust, 
         insertionReceiverKeyBottomRotationAdjust,
-        insertionReceiverCasingThickness) {
+        insertionReceiverCasingThickness, receiverStampText) {
     insertionReceiverOuterDia=hobieChairLegInsertDia+insertionReceiverCasingThickness*2;
     insertionReceiverOverallLength=hobieChairLegInsertDepth+bracketCasingThickness;
     difference() {
@@ -33,6 +38,13 @@ module insertionReceiver(insertionReceiverVerticalAngle,
             cube([insertionReceiverOuterDia/2+overlap,
                 insertionReceiverOuterDia+overlap*2,
                 insertionReceiverOverallLength+overlap*2]);
+        // Stamp
+        translate([receiverStampXPos,receiverStampYPos,
+            insertionReceiverOverallLength-receiverStampDepth]) {
+            linear_extrude(height=receiverStampDepth*4) {
+                text(receiverStampText,font="lintsec",size=receiverFontHeight);
+            }
+        }
     }
 }
 

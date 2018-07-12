@@ -20,7 +20,7 @@ rearPvcInsertAngle=0;  // was -8 before adding "z post" - TODO: Remove this
 rearPvcInsertPostExtensionXOffset=-0;  // was -10
 rearPvcInsertPostExtensionYOffset=0;   // was 10
 
-leftSide=false;
+leftSide=true;
 
 // This angle allows the body to be oriented such that it more or less aligns with
 // an imaginary line from front to back between the seat posts.  The "short-side"
@@ -42,14 +42,9 @@ rearInsertionReceiverKeyAngleOffsetAdjust=(leftSide) ? 2 : 0;
 
 rearInsertionReceiverCasingThickness=10;
 
-// Note: This angle "helps" the ultimate position/orientation of the center body
-// but must be combined with some tilt in the 45 degree PVC elbow.  This
-// is also affected by the receiverVerticalAngle.
-insertVerticalAngle=(leftSide) ? -0 : 0;  // was -4 and 4
-
 connectorPostDia=38;
 
-connectorPostLength=(leftSide) ? 30 : 30;
+connectorPostLength=(leftSide) ? 25 : 25;
 
 connectorPostTopRotationX=(leftSide) ? -20 : -20;
 connectorPostTopRotationY=(leftSide) ? 20 : 20;
@@ -90,7 +85,7 @@ union() {
                     insertionReceiver(rearInsertionReceiverVerticalAngle,
                         rearInsertionReceiverVerticalAngleOffsetAdjust,
                         rearInsertionReceiverKeyAngleOffsetAdjust,
-                        rearInsertionReceiverCasingThickness);
+                        rearInsertionReceiverCasingThickness, (leftSide) ? "L" : "R");
                         }
 }
 

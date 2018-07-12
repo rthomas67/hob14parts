@@ -66,7 +66,7 @@ union() {
             insertionReceiver(frontInsertionReceiverVerticalAngle,
                     frontInsertionReceiverVerticalAngleOffsetAdjust,
                     frontInsertionReceiverKeyAngleOffsetAdjust,
-                    frontInsertionReceiverCasingThickness);
+                    frontInsertionReceiverCasingThickness, (leftSide) ? "L" : "R");
     translate([pvc125FittingOuterDia/2+bracketCasingThickness+connectorSplineXPositionAdjust,connectorSplineYPositionAdjust,0])
         rotate([connectorSplineAngle,90,0])
             connectorSpline(connectorSplineRidgeCount,connectorSplineLength,
