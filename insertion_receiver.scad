@@ -1,7 +1,18 @@
+hobieChairLegInsertDia=24.3;
+hobieChairLegInsertDepth=40;
+hobieChairLegInsertOffset=0;
+
+// height of "blade" that fits into the alignment key slot on one side
+hobieChairLegKeyRidgeHeight=3.25;
+hobieChairLegKeyRidgeHeightCurvatureOverlap=0.5;
+hobieChairLegKeyRidgeWidth=4;
+hobieChairLegKeyRidgeTolerance=0.5;
+
 module insertionReceiver(insertionReceiverVerticalAngle,
         insertionReceiverVerticalAngleOffsetAdjust, 
-        insertionReceiverKeyBottomRotationAdjust) {
-    insertionReceiverOuterDia=hobieChairLegInsertDia+frontInsertionReceiverCasingThickness*2;
+        insertionReceiverKeyBottomRotationAdjust,
+        insertionReceiverCasingThickness) {
+    insertionReceiverOuterDia=hobieChairLegInsertDia+insertionReceiverCasingThickness*2;
     insertionReceiverOverallLength=hobieChairLegInsertDepth+bracketCasingThickness;
     difference() {
         cylinder(d=insertionReceiverOuterDia,

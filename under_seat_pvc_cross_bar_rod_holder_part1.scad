@@ -1,5 +1,7 @@
 include <insertion_receiver.scad>
 include <pvc_connectors.scad>
+include <under_seat_pvc_cross_bar_rod_holder_common.scad>
+include <connector_spline.scad>
 
 bracketWidth=40;
 bracketCasingThickness=20;
@@ -17,24 +19,15 @@ frontInsertionReceiverLowerExtensionYOffset=-3;
 
 frontInsertionReceiverCasingThickness=10;
 
-hobieChairLegInsertDia=24.3;
-hobieChairLegInsertDepth=40;
-hobieChairLegInsertOffset=0;
-
-// height of "blade" that fits into the alignment key slot on one side
-hobieChairLegKeyRidgeHeight=3.25;
-hobieChairLegKeyRidgeHeightCurvatureOverlap=0.5;
-hobieChairLegKeyRidgeWidth=4;
-hobieChairLegKeyRidgeTolerance=0.5;
-
 // Note: Difference between the insert angle and the front receiver
 // angle is about 8 degrees down
 // i.e. If the receiver is horizontal, the insert angles down a bit
-rearPvcInsertLength=40;
 rearPvcInsertOffset=10;
-rearPvcInsertAngle=0;  // was -8 before adding "z post" - TODO: Remove this
-rearPvcInsertPostExtensionXOffset=-0;  // was -10
-rearPvcInsertPostExtensionYOffset=0;   // was 10
+connectorSplineAngle=-8;
+connectorSplineXOffset=0;
+connectorSplineYOffset=10;
+connectorSplineXPositionAdjust=2;
+connectorSplineYPositionAdjust=-15;
 
 leftSide=false;
 
@@ -61,18 +54,6 @@ rearInsertionReceiverKeyAngleOffsetAdjust=(leftSide) ? 2 : 0;
 // is also affected by the receiverVerticalAngle.
 insertVerticalAngle=(leftSide) ? -0 : 0;  // was -4 and 4
 
-connectorPostDia=38;
-
-connectorPostLength=(leftSide) ? 30 : 30;
-
-connectorPostTopRotationX=(leftSide) ? -20 : -20;
-connectorPostTopRotationY=(leftSide) ? 20 : 20;
-connectorPostTopLength=(leftSide) ? 20 : 20;
-
-connectorPostBottomRotationX=(leftSide) ? -20 : -15;
-connectorPostBottomRotationY=(leftSide) ? -20 : -15;
-connectorPostBottomLength=(leftSide) ? 20 : 20;
-
 overlap=0.001;
 $fn=50;
 
@@ -84,7 +65,13 @@ union() {
         rotate([0,-90,0])
             insertionReceiver(frontInsertionReceiverVerticalAngle,
                     frontInsertionReceiverVerticalAngleOffsetAdjust,
-                    frontInsertionReceiverKeyAngleOffsetAdjust);
+                    frontInsertionReceiverKeyAngleOffsetAdjust,
+                    frontInsertionReceiverCasingThickness);
+    translate([pvc125FittingOuterDia/2+bracketCasingThickness+connectorSplineXPositionAdjust,connectorSplineYPositionAdjust,0])
+        rotate([connectorSplineAngle,90,0])
+            connectorSpline(connectorSplineRidgeCount,connectorSplineLength,
+                connectorSplineDia,connectorSplineRidgeDepth,connectorSplineTaperFactor);
+
 }
 
 module pvcPassThruBody() {
@@ -105,8 +92,8 @@ module pvcPassThruBody() {
                         -pvc125FittingOuterDia/2-frontInsertionReceiverLowerExtensionYOffset,0])
                     cylinder(d=bodyExtensionRoundoffDia, h=minkowskiAdjustedBracketWidth);
                 // Extension to make a base for the pvc insert post
-                translate([pvc125FittingOuterDia/2+bracketCasingThickness+rearPvcInsertPostExtensionXOffset,
-                        -pvc125FittingOuterDia/2-rearPvcInsertPostExtensionYOffset,0])
+                translate([pvc125FittingOuterDia/2+bracketCasingThickness+connectorSplineXOffset,
+                        -pvc125FittingOuterDia/2-connectorSplineYOffset,0])
                     rotate([0,insertVerticalAngle,0])
                         cylinder(d=bodyExtensionRoundoffDia, h=minkowskiAdjustedBracketWidth);
             }
@@ -131,7 +118,7 @@ module pvcPassThruBody() {
         stampDepth=0.2;
         fontHeight=8;
         stampYInset=-12;
-        stampXOffset=(leftSide) ? -12 : -16;
+        stampXOffset=(leftSide) ? -12 : -25;
         translate([stampXOffset,pvc125FittingOuterDia/2-fontHeight-stampYInset,
             bracketWidth-stampDepth]) {
             linear_extrude(height=stampDepth*4) {

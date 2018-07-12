@@ -1,5 +1,7 @@
 include <insertion_receiver.scad>
 include <pvc_connectors.scad>
+include <under_seat_pvc_cross_bar_rod_holder_common.scad>
+include <connector_spline.scad>
 
 bracketWidth=40;
 bracketCasingThickness=20;
@@ -8,24 +10,6 @@ setScrewHoleDia=3;
 
 bodyExtensionRoundoffDia=9;
 bodyEdgeRoundOffDia=3;
-
-frontInsertionReceiverExtensionXOffset=-5;
-frontInsertionReceiverExtensionYOffset=-3;
-
-frontInsertionReceiverLowerExtensionXOffset=-5;
-frontInsertionReceiverLowerExtensionYOffset=-3;
-
-frontInsertionReceiverCasingThickness=10;
-
-hobieChairLegInsertDia=24.3;
-hobieChairLegInsertDepth=40;
-hobieChairLegInsertOffset=0;
-
-// height of "blade" that fits into the alignment key slot on one side
-hobieChairLegKeyRidgeHeight=3.25;
-hobieChairLegKeyRidgeHeightCurvatureOverlap=0.5;
-hobieChairLegKeyRidgeWidth=4;
-hobieChairLegKeyRidgeTolerance=0.5;
 
 // Note: Difference between the insert angle and the front receiver
 // angle is about 8 degrees down
@@ -56,6 +40,8 @@ rearInsertionReceiverVerticalAngleOffsetAdjust=(leftSide) ? 0 : 0;
 
 rearInsertionReceiverKeyAngleOffsetAdjust=(leftSide) ? 2 : 0;
 
+rearInsertionReceiverCasingThickness=10;
+
 // Note: This angle "helps" the ultimate position/orientation of the center body
 // but must be combined with some tilt in the 45 degree PVC elbow.  This
 // is also affected by the receiverVerticalAngle.
@@ -85,20 +71,27 @@ union() {
     // TODO: OR... still do the connectorPostTransform to set the position, 
     // and then flip/reorient the whole thing.  
     // TODO: OR... build the connector post upside down (from the top at x/y plane center) instead
-        translate([0,0,60])
-            rotate([180,0,0]) 
+  //      translate([0,0,60])
+  //          rotate([180,0,0]) 
+                difference() {
                 connectorPost(connectorPostLength,connectorPostDia,
                         connectorPostTopRotationX,connectorPostTopRotationY,
                         connectorPostTopLength,connectorPostBottomRotationX,connectorPostBottomRotationY,
                         connectorPostBottomLength);
-//                connectorPostTransform(connectorPostLength,connectorPostDia,
-//                        connectorPostTopRotationX,connectorPostTopRotationY,connectorPostTopLength,
-//                        connectorPostBottomRotationX,connectorPostBottomRotationY,
-//                        connectorPostBottomLength) {
-    rotate([180,0,0])
+                    translate([0,0,-overlap])
+                    connectorSplineCutout(connectorSplineRidgeCount,connectorSplineLength,
+                        connectorSplineDia,connectorSplineRidgeDepth,connectorSplineTaperFactor);
+                }
+                connectorPostTransform(connectorPostLength,connectorPostDia,
+                        connectorPostTopRotationX,connectorPostTopRotationY,connectorPostTopLength,
+                        connectorPostBottomRotationX,connectorPostBottomRotationY,
+                        connectorPostBottomLength) {
+//    rotate([180,0,0])
                     insertionReceiver(rearInsertionReceiverVerticalAngle,
                         rearInsertionReceiverVerticalAngleOffsetAdjust,
-                        rearInsertionReceiverKeyAngleOffsetAdjust);
+                        rearInsertionReceiverKeyAngleOffsetAdjust,
+                        rearInsertionReceiverCasingThickness);
+                        }
 }
 
 /*
