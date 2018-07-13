@@ -36,9 +36,12 @@ leftSide=true;
 // seat post insert on the front seat post is not directly aligned, and is
 // a little different on the left and right side of the seat.
 // This could also be described as "yaw" adjustment.
-frontInsertionReceiverVerticalAngle=(leftSide) ? -2 : -2;
+frontInsertionReceiverVerticalAngle=(leftSide) ? -2.5 : -2;
 
-frontInsertionReceiverKeyAngleOffsetAdjust=(leftSide) ? 1.5 : 1;
+// This angle rotates the key around so the PVC cross bar is level
+// under the chair.
+// This could also be described as "roll" adjustment.
+frontInsertionReceiverKeyAngleOffsetAdjust=(leftSide) ? -1.5 : 1;
 
 // These align the key and the angle of the cutout hole on the receiver
 // for the rear chair-leg insert post
