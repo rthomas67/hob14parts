@@ -35,8 +35,6 @@ frontInsertionReceiverKeyAngleOffsetAdjust=(leftSide) ? 1.5 : 1;
 // These align the key and the angle of the cutout hole on the receiver
 // for the rear chair-leg insert post
 rearInsertionReceiverVerticalAngle=(leftSide) ? 0 : 0;
-// This re-centers the cutout.
-rearInsertionReceiverVerticalAngleOffsetAdjust=(leftSide) ? 0 : 0;
 
 rearInsertionReceiverKeyAngleOffsetAdjust=(leftSide) ? 2 : 0;
 
@@ -83,7 +81,6 @@ union() {
                         connectorPostBottomLength) {
 //    rotate([180,0,0])
                     insertionReceiver(rearInsertionReceiverVerticalAngle,
-                        rearInsertionReceiverVerticalAngleOffsetAdjust,
                         rearInsertionReceiverKeyAngleOffsetAdjust,
                         rearInsertionReceiverCasingThickness, (leftSide) ? "L" : "R");
                         }

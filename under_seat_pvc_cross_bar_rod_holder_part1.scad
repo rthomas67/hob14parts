@@ -29,15 +29,14 @@ connectorSplineYOffset=10;
 connectorSplineXPositionAdjust=2;
 connectorSplineYPositionAdjust=-15;
 
-leftSide=false;
+leftSide=true;
 
 // This angle allows the body to be oriented such that it more or less aligns with
 // an imaginary line from front to back between the seat posts.  The "short-side"
 // seat post insert on the front seat post is not directly aligned, and is
 // a little different on the left and right side of the seat.
+// This could also be described as "yaw" adjustment.
 frontInsertionReceiverVerticalAngle=(leftSide) ? -2 : -2;
-// This re-centers the cutout.
-frontInsertionReceiverVerticalAngleOffsetAdjust=(leftSide) ? 2.5 : 1;
 
 frontInsertionReceiverKeyAngleOffsetAdjust=(leftSide) ? 1.5 : 1;
 
@@ -64,7 +63,6 @@ union() {
         // Note: receiverVerticalAngle is applied to the opening so the exterior can remain flat for printing
         rotate([0,-90,0])
             insertionReceiver(frontInsertionReceiverVerticalAngle,
-                    frontInsertionReceiverVerticalAngleOffsetAdjust,
                     frontInsertionReceiverKeyAngleOffsetAdjust,
                     frontInsertionReceiverCasingThickness, (leftSide) ? "L" : "R");
     translate([pvc125FittingOuterDia/2+bracketCasingThickness+connectorSplineXPositionAdjust,connectorSplineYPositionAdjust,0])

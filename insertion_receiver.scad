@@ -13,8 +13,7 @@ receiverFontHeight=4;
 receiverStampXPos=-3;
 receiverStampYPos=16;
 
-module insertionReceiver(insertionReceiverVerticalAngle,
-        insertionReceiverVerticalAngleOffsetAdjust, 
+module insertionReceiver(insertionReceiverVerticalAngle, 
         insertionReceiverKeyBottomRotationAdjust,
         insertionReceiverCasingThickness, receiverStampText) {
     insertionReceiverOuterDia=hobieChairLegInsertDia+insertionReceiverCasingThickness*2;
@@ -23,8 +22,12 @@ module insertionReceiver(insertionReceiverVerticalAngle,
         cylinder(d=insertionReceiverOuterDia,
             h=insertionReceiverOverallLength);
     translate([0,0,bracketCasingThickness+overlap])
-        translate([insertionReceiverVerticalAngleOffsetAdjust,0,0])  // offset to recenter
-            rotate([0,insertionReceiverVerticalAngle,insertionReceiverKeyBottomRotationAdjust])
+        // move back to previous position after rotation
+        translate([0,0,hobieChairLegInsertDepth])
+        // rotate while opening end is at axis (keeps opening centered)
+        rotate([0,insertionReceiverVerticalAngle,insertionReceiverKeyBottomRotationAdjust])
+        // move the opening end to the axis before rotation
+        translate([0,0,-hobieChairLegInsertDepth])
                 // apply the vertical angle internally
                 insertionReceiverCutout();
         // flatten the sides of the cylinder
