@@ -1,4 +1,4 @@
-hobieChairLegInsertDia=24.3;
+hobieChairLegInsertDia=24.7;
 hobieChairLegInsertDepth=40;
 hobieChairLegInsertOffset=0;
 
@@ -49,7 +49,7 @@ module insertionReceiver(insertionReceiverVerticalAngle,
 }
 
 module insertionReceiverCutout() {
-    flatSideCornerHeight=1.5;
+    flatSideCornerHeight=2.5;
     bevelHeight=3;
     bevelFactor=1.5;
     actualKeyWidth=hobieChairLegKeyRidgeWidth+hobieChairLegKeyRidgeTolerance*2;
