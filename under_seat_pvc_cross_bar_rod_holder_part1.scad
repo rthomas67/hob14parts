@@ -118,14 +118,14 @@ module pvcPassThruBody() {
         stampDepth=0.2;
         fontHeight=8;
         stampYInset=-12;
-        stampXOffset=(leftSide) ? -12 : -25;
+        stampXOffset=-5;
         translate([stampXOffset,pvc125FittingOuterDia/2-fontHeight-stampYInset,
             bracketWidth-stampDepth]) {
             linear_extrude(height=stampDepth*4) {
                 if (leftSide) {
-                    text("LEFT",font="lintsec",size=fontHeight);
+                    text("L",font="lintsec",size=fontHeight);
                 } else {
-                    text("RIGHT",font="lintsec",size=fontHeight);
+                    text("R",font="lintsec",size=fontHeight);
                 }
             }
         }
