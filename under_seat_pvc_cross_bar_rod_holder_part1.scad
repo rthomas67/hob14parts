@@ -36,25 +36,12 @@ leftSide=true;
 // seat post insert on the front seat post is not directly aligned, and is
 // a little different on the left and right side of the seat.
 // This could also be described as "yaw" adjustment.
-frontInsertionReceiverVerticalAngle=(leftSide) ? -2.5 : -2;
+frontInsertionReceiverVerticalAngle=(leftSide) ? 1 : -2.5;
 
 // This angle rotates the key around so the PVC cross bar is level
 // under the chair.
 // This could also be described as "roll" adjustment.
-frontInsertionReceiverKeyAngleOffsetAdjust=(leftSide) ? -1.5 : 1;
-
-// These align the key and the angle of the cutout hole on the receiver
-// for the rear chair-leg insert post
-rearInsertionReceiverVerticalAngle=(leftSide) ? 0 : 0;
-// This re-centers the cutout.
-rearInsertionReceiverVerticalAngleOffsetAdjust=(leftSide) ? 0 : 0;
-
-rearInsertionReceiverKeyAngleOffsetAdjust=(leftSide) ? 2 : 0;
-
-// Note: This angle "helps" the ultimate position/orientation of the center body
-// but must be combined with some tilt in the 45 degree PVC elbow.  This
-// is also affected by the receiverVerticalAngle.
-insertVerticalAngle=(leftSide) ? -0 : 0;  // was -4 and 4
+frontInsertionReceiverKeyAngleOffsetAdjust=(leftSide) ? 1 : -1.5;
 
 overlap=0.001;
 $fn=50;
@@ -92,10 +79,9 @@ module pvcPassThruBody() {
                 translate([-pvc125FittingOuterDia/2-bracketCasingThickness-frontInsertionReceiverLowerExtensionXOffset,
                         -pvc125FittingOuterDia/2-frontInsertionReceiverLowerExtensionYOffset,0])
                     cylinder(d=bodyExtensionRoundoffDia, h=minkowskiAdjustedBracketWidth);
-                // Extension to make a base for the pvc insert post
+                // Extension to make a base for the pvc insert spline
                 translate([pvc125FittingOuterDia/2+bracketCasingThickness+connectorSplineXOffset,
                         -pvc125FittingOuterDia/2-connectorSplineYOffset,0])
-                    rotate([0,insertVerticalAngle,0])
                         cylinder(d=bodyExtensionRoundoffDia, h=minkowskiAdjustedBracketWidth);
             }
             sphere(d=bodyEdgeRoundOffDia);

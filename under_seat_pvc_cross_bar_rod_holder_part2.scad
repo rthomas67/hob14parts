@@ -11,26 +11,7 @@ setScrewHoleDia=3;
 bodyExtensionRoundoffDia=9;
 bodyEdgeRoundOffDia=3;
 
-// Note: Difference between the insert angle and the front receiver
-// angle is about 8 degrees down
-// i.e. If the receiver is horizontal, the insert angles down a bit
-rearPvcInsertLength=40;
-rearPvcInsertOffset=10;
-rearPvcInsertAngle=0;  // was -8 before adding "z post" - TODO: Remove this
-rearPvcInsertPostExtensionXOffset=-0;  // was -10
-rearPvcInsertPostExtensionYOffset=0;   // was 10
-
-leftSide=true;
-
-// This angle allows the body to be oriented such that it more or less aligns with
-// an imaginary line from front to back between the seat posts.  The "short-side"
-// seat post insert on the front seat post is not directly aligned, and is
-// a little different on the left and right side of the seat.
-frontInsertionReceiverVerticalAngle=(leftSide) ? -2 : -2;
-// This re-centers the cutout.
-frontInsertionReceiverVerticalAngleOffsetAdjust=(leftSide) ? 2.5 : 1;
-
-frontInsertionReceiverKeyAngleOffsetAdjust=(leftSide) ? 1.5 : 1;
+leftSide=false;
 
 // These align the key and the angle of the cutout hole on the receiver
 // for the rear chair-leg insert post
@@ -44,12 +25,12 @@ connectorPostDia=38;
 
 connectorPostLength=(leftSide) ? 25 : 25;
 
-connectorPostTopRotationX=(leftSide) ? -20 : -20;
-connectorPostTopRotationY=(leftSide) ? 20 : 20;
+connectorPostTopRotationX=(leftSide) ? -20 : -15;
+connectorPostTopRotationY=(leftSide) ? 20 : -15;
 connectorPostTopLength=(leftSide) ? 20 : 20;
 
 connectorPostBottomRotationX=(leftSide) ? -20 : -15;
-connectorPostBottomRotationY=(leftSide) ? -20 : -15;
+connectorPostBottomRotationY=(leftSide) ? -20 : 20;
 connectorPostBottomLength=(leftSide) ? 20 : 20;
 
 overlap=0.001;
@@ -66,24 +47,25 @@ union() {
     // TODO: OR... build the connector post upside down (from the top at x/y plane center) instead
   //      translate([0,0,60])
   //          rotate([180,0,0]) 
-                difference() {
-                connectorPost(connectorPostLength,connectorPostDia,
-                        connectorPostTopRotationX,connectorPostTopRotationY,
-                        connectorPostTopLength,connectorPostBottomRotationX,connectorPostBottomRotationY,
-                        connectorPostBottomLength);
-                    translate([0,0,-overlap])
-                    connectorSplineCutout(connectorSplineRidgeCount,connectorSplineLength,
-                        connectorSplineDia,connectorSplineRidgeDepth,connectorSplineTaperFactor);
-                }
-                connectorPostTransform(connectorPostLength,connectorPostDia,
-                        connectorPostTopRotationX,connectorPostTopRotationY,connectorPostTopLength,
-                        connectorPostBottomRotationX,connectorPostBottomRotationY,
-                        connectorPostBottomLength) {
+    difference() {
+        connectorPost(connectorPostLength,connectorPostDia,
+                connectorPostTopRotationX,connectorPostTopRotationY,
+                connectorPostTopLength,connectorPostBottomRotationX,
+                connectorPostBottomRotationY,
+                connectorPostBottomLength);
+            translate([0,0,-overlap])
+            connectorSplineCutout(connectorSplineRidgeCount,connectorSplineLength,
+                connectorSplineDia*1.1,connectorSplineRidgeDepth,connectorSplineTaperFactor);
+        }
+        connectorPostTransform(connectorPostLength,connectorPostDia,
+                connectorPostTopRotationX,connectorPostTopRotationY,connectorPostTopLength,
+                connectorPostBottomRotationX,connectorPostBottomRotationY,
+                connectorPostBottomLength) {
 //    rotate([180,0,0])
-                    insertionReceiver(rearInsertionReceiverVerticalAngle,
-                        rearInsertionReceiverKeyAngleOffsetAdjust,
-                        rearInsertionReceiverCasingThickness, (leftSide) ? "L" : "R");
-                        }
+            insertionReceiver(rearInsertionReceiverVerticalAngle,
+                rearInsertionReceiverKeyAngleOffsetAdjust,
+                rearInsertionReceiverCasingThickness, (leftSide) ? "L" : "R");
+        }
 }
 
 /*
@@ -95,7 +77,7 @@ module connectorPostTransform(postLength, postDia,
         topRotationX,topRotationY, topLength, 
         bottomRotationX, bottomRotationY,bottomLength) {
     // 3 stages of move then rotate into displaced position
-    translate([0,0,bottomLength]) rotate([bottomRotationX,bottomRotationX,0]) 
+    translate([0,0,bottomLength]) rotate([bottomRotationX,bottomRotationY,0]) 
         translate([0,0,postLength])
             rotate([topRotationX,topRotationY,0]) translate([0,0,topLength])
                 children();
