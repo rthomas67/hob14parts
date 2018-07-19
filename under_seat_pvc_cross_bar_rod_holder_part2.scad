@@ -21,17 +21,18 @@ rearInsertionReceiverKeyAngleOffsetAdjust=(leftSide) ? 2 : 0;
 
 rearInsertionReceiverCasingThickness=10;
 
-connectorPostDia=38;
+connectorPostMiddleDia=38;
+connectorPostMiddleLength=(leftSide) ? 25 : 23;
 
-connectorPostLength=(leftSide) ? 25 : 25;
-
-connectorPostTopRotationX=(leftSide) ? -20 : -15;
-connectorPostTopRotationY=(leftSide) ? 20 : -15;
+connectorPostTopRotationX=(leftSide) ? -20 : -17.5;
+connectorPostTopRotationY=(leftSide) ? 20 : -17;
 connectorPostTopLength=(leftSide) ? 20 : 20;
 
-connectorPostBottomRotationX=(leftSide) ? -20 : -15;
-connectorPostBottomRotationY=(leftSide) ? -20 : 20;
+connectorPostBottomRotationX=(leftSide) ? -20 : -17.5;
+connectorPostBottomRotationY=(leftSide) ? -20 : 22;
 connectorPostBottomLength=(leftSide) ? 20 : 20;
+
+splineCutoutSizeFactor=1.075;
 
 overlap=0.001;
 $fn=50;
@@ -48,16 +49,17 @@ union() {
   //      translate([0,0,60])
   //          rotate([180,0,0]) 
     difference() {
-        connectorPost(connectorPostLength,connectorPostDia,
+        connectorPost(connectorPostMiddleLength,connectorPostMiddleDia,
                 connectorPostTopRotationX,connectorPostTopRotationY,
                 connectorPostTopLength,connectorPostBottomRotationX,
                 connectorPostBottomRotationY,
                 connectorPostBottomLength);
             translate([0,0,-overlap])
             connectorSplineCutout(connectorSplineRidgeCount,connectorSplineLength,
-                connectorSplineDia*1.1,connectorSplineRidgeDepth,connectorSplineTaperFactor);
+                connectorSplineDia*splineCutoutSizeFactor,
+                    connectorSplineRidgeDepth,connectorSplineTaperFactor);
         }
-        connectorPostTransform(connectorPostLength,connectorPostDia,
+        connectorPostTransform(connectorPostMiddleLength,connectorPostMiddleDia,
                 connectorPostTopRotationX,connectorPostTopRotationY,connectorPostTopLength,
                 connectorPostBottomRotationX,connectorPostBottomRotationY,
                 connectorPostBottomLength) {
