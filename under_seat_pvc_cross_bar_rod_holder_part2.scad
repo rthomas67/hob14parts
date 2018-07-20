@@ -25,12 +25,12 @@ connectorPostMiddleDia=38;
 connectorPostMiddleLength=(leftSide) ? 25 : 23;
 
 connectorPostTopRotationX=(leftSide) ? -20 : -17.5;
-connectorPostTopRotationY=(leftSide) ? 20 : -17;
+connectorPostTopRotationY=(leftSide) ? 20 : -19;
 connectorPostTopLength=(leftSide) ? 20 : 20;
 
-connectorPostBottomRotationX=(leftSide) ? -20 : -17.5;
-connectorPostBottomRotationY=(leftSide) ? -20 : 22;
-connectorPostBottomLength=(leftSide) ? 20 : 20;
+connectorPostBottomRotationX=(leftSide) ? -20 : -18.5;
+connectorPostBottomRotationY=(leftSide) ? -20 : 19;
+connectorPostBottomLength=(leftSide) ? 20 : 22;
 
 splineCutoutSizeFactor=1.075;
 
