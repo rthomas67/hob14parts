@@ -3,6 +3,8 @@ include <pvc_connectors.scad>
 include <under_seat_pvc_cross_bar_rod_holder_common.scad>
 include <connector_spline.scad>
 
+showReferences=true;
+
 bracketWidth=40;
 bracketCasingThickness=20;
 
@@ -11,7 +13,7 @@ setScrewHoleDia=3;
 bodyExtensionRoundoffDia=9;
 bodyEdgeRoundOffDia=3;
 
-leftSide=false;
+leftSide=true;
 
 // These align the key and the angle of the cutout hole on the receiver
 // for the rear chair-leg insert post
@@ -22,14 +24,14 @@ rearInsertionReceiverKeyAngleOffsetAdjust=(leftSide) ? 2 : 0;
 rearInsertionReceiverCasingThickness=10;
 
 connectorPostMiddleDia=38;
-connectorPostMiddleLength=(leftSide) ? 25 : 23;
+connectorPostMiddleLength=(leftSide) ? 22 : 23;
 
-connectorPostTopRotationX=(leftSide) ? -20 : -17.5;
-connectorPostTopRotationY=(leftSide) ? 20 : -19;
+connectorPostTopRotationX=(leftSide) ? -18 : -17.5;
+connectorPostTopRotationY=(leftSide) ? 24 : -19.5;
 connectorPostTopLength=(leftSide) ? 20 : 20;
 
-connectorPostBottomRotationX=(leftSide) ? -20 : -18.5;
-connectorPostBottomRotationY=(leftSide) ? -20 : 19;
+connectorPostBottomRotationX=(leftSide) ? -18 : -19;
+connectorPostBottomRotationY=(leftSide) ? -23 : 18.5;
 connectorPostBottomLength=(leftSide) ? 20 : 22;
 
 splineCutoutSizeFactor=1.075;
@@ -37,8 +39,8 @@ splineCutoutSizeFactor=1.075;
 overlap=0.001;
 $fn=50;
 
-// TODO: Find a simple way to create a spline (linear extrude a cartoon sun shape or use a low $fn cylinder)
-// TODO: Cut out a (negative) spline into which the other part will glue
+if (showReferences) color([0.5,0,0], t=0.5) 
+    import("under_seat_pvc_cross_bar_rod_holder_part2_left_draft5.stl");
 
 union() {
     // TODO: re-position & re-orient to mate up with the
