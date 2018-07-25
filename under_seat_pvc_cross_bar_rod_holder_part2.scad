@@ -3,7 +3,7 @@ include <pvc_connectors.scad>
 include <under_seat_pvc_cross_bar_rod_holder_common.scad>
 include <connector_spline.scad>
 
-showReferences=true;
+showReferences=false;
 
 bracketWidth=40;
 bracketCasingThickness=20;
