@@ -3,7 +3,7 @@ include <pvc_connectors.scad>
 include <under_seat_pvc_cross_bar_rod_holder_common.scad>
 include <connector_spline.scad>
 
-showReferences=false;
+showReferences=true;
 
 bracketWidth=40;
 bracketCasingThickness=20;
@@ -13,7 +13,7 @@ setScrewHoleDia=3;
 bodyExtensionRoundoffDia=9;
 bodyEdgeRoundOffDia=3;
 
-leftSide=true;
+leftSide=false;
 
 // These align the key and the angle of the cutout hole on the receiver
 // for the rear chair-leg insert post
@@ -39,8 +39,10 @@ splineCutoutSizeFactor=1.075;
 overlap=0.001;
 $fn=50;
 
-if (showReferences) color([0.5,0,0], t=0.5) 
-    import("under_seat_pvc_cross_bar_rod_holder_part2_left_draft5.stl");
+if (showReferences && leftSide) color([0.5,0,0], t=0.5) 
+    import("draft_renders/under_seat_pvc_cross_bar_rod_holder_part2_left_draft5.stl");
+if (showReferences && !leftSide) color([0.5,0,0], t=0.5) 
+    import("draft_renders/under_seat_pvc_cross_bar_rod_holder_part2_right_draft4.stl");
 
 union() {
     // TODO: re-position & re-orient to mate up with the
